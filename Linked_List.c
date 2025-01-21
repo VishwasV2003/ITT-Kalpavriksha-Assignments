@@ -12,42 +12,47 @@ struct Node* make_node(int new_data){
     return new_node;
 }
 
-struct Node* add_in_beginning(struct Node* head,int new_data){
-    if(head==NULL){
-        head=make_node(new_data);
+void add_in_beginning(struct Node** head,int new_data){
+    struct Node* curr_head=*head;
+    if(curr_head==NULL){
+        curr_head=make_node(new_data);
     }
     else{
         struct Node* temp=make_node(new_data);
-        temp->next=head;
-        head=temp;
+        temp->next=curr_head;
+        curr_head=temp;
     }
-    return head;
+    *head=curr_head;
+    // return head;
 }
-struct Node* add_in_end(struct Node* head,int new_data){
-    if(head==NULL){
-        head=make_node(new_data);
+void add_in_end(struct Node** head,int new_data){
+    struct Node* curr_head=*head;
+    if(curr_head==NULL){
+        curr_head=make_node(new_data);
     }
     else{
-        struct Node* temp=head; 
+        struct Node* temp=curr_head; 
         while(temp->next!=NULL){
             temp=temp->next;
         }
         temp->next=make_node(new_data);
     }
-    return head;
+    *head=curr_head;
+    // return head;
     
 }
-struct Node* add_at_position(struct Node* head,int new_data,int operation_index){
+void add_at_position(struct Node** head,int new_data,int operation_index){
+    struct Node* curr_head=*head;
     if(operation_index==1){
-        head=add_in_beginning(head,new_data);
+        add_in_beginning(&curr_head,new_data);
     }
     else{
-        struct Node* temp=head;
+        struct Node* temp=curr_head;
         while(temp!=NULL && temp->next!=NULL && operation_index-1!=1){
             temp=temp->next;
             operation_index--;
         }
-        if(operation_index-1==1){
+        if(operation_index-1==1 && temp!=NULL){
             struct Node* new_node=make_node(new_data);
             new_node->next=temp->next;
             temp->next=new_node;
@@ -56,7 +61,8 @@ struct Node* add_at_position(struct Node* head,int new_data,int operation_index)
             printf("Invalid index\n");
         }
     }
-    return head;
+    *head=curr_head;
+    // return head;
 }
 void print_list(struct Node* head){
     printf("\nLinked List:");
@@ -81,21 +87,25 @@ void update_at_position(struct Node* head,int new_data,int position){
         printf("Invalid Index\n");
     }
 }
-struct Node* delete_first_element(struct Node* head){
-    if(head!=NULL){
-        struct Node* temp=head->next;
+void delete_first_element(struct Node** head){
+    struct Node* curr_head=*head;
+    if(curr_head!=NULL){
+        struct Node* temp=curr_head->next;
         free(head);
-        head=temp;
+        curr_head=temp;
     }
     else{
         printf("No elements to delete\n");
     }
-    return head;
+    *head=curr_head;
+    // return head;
 }
-struct Node* delete_last_element(struct Node* head){
-    struct Node* temp=head;
-    struct Node* prev=head;
-    if(head!=NULL){
+void delete_last_element(struct Node** head){
+    struct Node* curr_head=*head;
+
+    struct Node* temp=curr_head;
+    struct Node* prev=curr_head;
+    if(curr_head!=NULL){
         while(temp->next!=NULL){
             prev=temp;
             temp=temp->next;
@@ -105,27 +115,29 @@ struct Node* delete_last_element(struct Node* head){
             free(temp);
         }
         else{
-            head=NULL;
+            curr_head=NULL;
         }
     }
     else{
         printf("No elements to delete\n");
     }
-    return head;
+    *head=curr_head;
+    // return head;
 }
-struct Node* delete_element_at_position(struct Node* head,int operation_index){
+void delete_element_at_position(struct Node** head,int operation_index){
+    struct Node* curr_head=*head;
     if(operation_index==1){
-        head=delete_first_element(head);
+        delete_first_element(&curr_head);
     }
     else{
-        struct Node* temp=head;
+        struct Node* temp=curr_head;
         struct Node* prev=NULL;
         while(temp!=NULL && temp->next!=NULL && operation_index-1!=0){
             prev=temp;
             temp=temp->next;
             operation_index--;
         }
-        if(operation_index-1==0){
+        if(operation_index-1==0 && temp!=NULL){
             prev->next=temp->next;
             free(temp);
         }
@@ -133,7 +145,8 @@ struct Node* delete_element_at_position(struct Node* head,int operation_index){
             printf("Invalid Index\n");
         }
     }
-    return head;
+    *head=curr_head;
+    // return head;
 }
 int main(){
     struct Node* head=NULL;
@@ -151,17 +164,17 @@ int main(){
             case 1:
                 printf("Enter Value:");
                 scanf("%d",&new_data);
-                head=add_in_end(head,new_data);
+                add_in_end(&head,new_data);
                 break;
             case 2:
                 printf("Enter Value:");
                 scanf("%d",&new_data);
-                head=add_in_beginning(head,new_data);
+                add_in_beginning(&head,new_data);
                 break;
             case 3:
                 printf("Enter Value and index:");
                 scanf("%d%d",&new_data,&operation_index);
-                head=add_at_position(head,new_data,operation_index);
+                add_at_position(&head,new_data,operation_index);
                 break;
             case 4:
                 print_list(head);
@@ -172,15 +185,15 @@ int main(){
                 update_at_position(head,new_data,operation_index);
                 break;
             case 6:
-                head=delete_first_element(head);
+                delete_first_element(&head);
                 break;
             case 7:
-                head=delete_last_element(head);
+                delete_last_element(&head);
                 break;
             case 8:
                 printf("Enter index:");
                 scanf("%d",&operation_index);
-                head=delete_element_at_position(head,operation_index);
+                delete_element_at_position(&head,operation_index);
                 break;
             default:
                 printf("Invalid Input\n");
