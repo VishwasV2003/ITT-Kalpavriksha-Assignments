@@ -53,6 +53,10 @@ Node* reverse(Node* head,int group_size){
     head=temp;
 
     nextHead->next=next;
+
+    if(next==NULL)
+        return head;
+    
     for(int index=0;index<group_size && next!=NULL;index++){
         prev=next;
         next=next->next;
