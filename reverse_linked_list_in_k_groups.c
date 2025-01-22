@@ -34,36 +34,37 @@ void print(Node* head){
 }
 
 Node* reverse(Node* head,int group_size){
-    if(head==NULL)
-        return NULL;
-
-    Node* prev=NULL;
-    Node* temp=head;
-    Node* next=head->next;
-    
-    Node* nextHead=head;
-    for(int index=0;index<group_size-1 && next!=NULL;index++){
+    if(head){
+        Node* prev=NULL;
+        Node* temp=head;
+        Node* next=head->next;
+        
+        Node* nextHead=head;
+        for(int index=0;index<group_size-1 && next!=NULL;index++){
+            temp->next=prev;
+            prev=temp;
+            temp=next;
+            next=next->next;
+        }
         temp->next=prev;
-        prev=temp;
-        temp=next;
-        next=next->next;
+
+        head=temp;
+
+        nextHead->next=next;
+
+        if(next){
+            for(int index=0;index<group_size && next!=NULL;index++){
+                prev=next;
+                next=next->next;
+            }
+
+            if(prev)
+                prev->next=reverse(prev->next,group_size);
+        }
+
     }
-    temp->next=prev;
 
-    head=temp;
-
-    nextHead->next=next;
-
-    if(next==NULL)
-        return head;
     
-    for(int index=0;index<group_size && next!=NULL;index++){
-        prev=next;
-        next=next->next;
-    }
-
-    if(prev)
-        prev->next=reverse(prev->next,group_size);
 
     return head;
 
