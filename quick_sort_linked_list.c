@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct Node{
+    struct Node* next;
+    int data;
+}Node;
+
+Node* make_node(int value){
+    Node* new_node=(Node*)malloc(sizeof(Node));
+    new_node->data=value;
+    new_node->next=NULL;
+    return new_node;
+}
+Node* insert(Node* head,int value){
+    if(head==NULL){
+        head=make_node(value);
+    }
+    else{
+        Node* temp=head;
+        while(temp->next!=NULL){
+            temp=temp->next;
+        } 
+        temp->next=make_node(value);
+    }
+    return head;
+}
+void print(Node* head){
+    while(head!=NULL){
+        printf("%d ",head->data);
+        head=head->next;
+    }
+}
+Node* insert_node(Node* head,Node* new_node){
+    if(head==NULL){
+        head=new_node;
+    }
+    else{
+        Node* temp=head;
+        while(temp->next!=NULL){
+            temp=temp->next;
+        } 
+        temp->next=new_node;
+    }
+    return head;
+}
+Node* get_pivot(Node* head){
+    while(head->next)
+        head=head->next;
+    return head;
+}
+Node* quick_sort(Node* head){
+    if(head==NULL || head->next==NULL)
+        return head;
+
+    Node* pivot=get_pivot(head);
+    Node* curr=head;
+    Node* prev=NULL;
+
+    Node* smaller=NULL;
+    Node* larger=NULL;
+
+    while(curr && curr!=pivot){
+        if(curr->data > pivot->data)
+            larger=insert_node(larger,curr);
+        else
+            smaller=insert_node(smaller,curr);
+
+        prev=curr;
+        curr=curr->next;
+        prev->next=NULL;
+    }
+
+    smaller=quick_sort(smaller);
+    larger=quick_sort(larger);
+
+    pivot->next=larger;
+    if(smaller){
+        head=smaller;
+        while(smaller->next)
+            smaller=smaller->next;
+        smaller->next=pivot;
+    }
+    else
+        head=pivot;
+
+    return head;
+}
+void main(){
+    Node* head=NULL;
+    printf("Input space seperated values ended by 0:");
+    while(1){
+        int value;
+        scanf("%d",&value);
+        if(value==0)
+            break;
+        head=insert(head,value);
+    }
+    printf("Before sorting:");
+    print(head);
+    head=quick_sort(head);
+    printf("\nAfter sorting:");
+    print(head);
+}
