@@ -19,13 +19,16 @@ Node* add(Node* head,int key,int value){
     else{
         Node* temp=head;
         int updated=0;
-        while(temp->next){
+        while(temp){
             if(temp->key==key){
                 temp->value=value;
                 updated=1;
                 break;
             }
-            temp=temp->next;
+            if(temp->next)
+                temp=temp->next;
+            else 
+                break;
         }
         if(!updated)
             temp->next=make_node(key,value);
