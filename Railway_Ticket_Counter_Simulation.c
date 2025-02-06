@@ -120,7 +120,6 @@ void main(){
             display_queue(passenger_queue,front,rear);
         }
         else
-            cout<<"vishwas";
-            // printf("Invalid Input\n");
+            printf("Invalid Input\n");
     }
 }
